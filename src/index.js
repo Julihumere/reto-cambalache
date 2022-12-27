@@ -1,14 +1,20 @@
-const express = require("express");
-const app = express();
-const routes = require("./rutas/index");
+require("dotenv").config();
+const server = require("./app");
+const sequelize = require("./db.js");
 
-//Middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+require("./modelos/Usuarios.js");
+require("./modelos/Repositorios.js");
 
-//Rutas
-app.use(routes);
+async function Main() {
+  try {
+    await sequelize.sync({ force: false }).then(
+      server.listen(3000, () => {
+        console.log("El servido esta funcionando en el puerto 3000");
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-app.listen(3000, () => {
-  console.log(`El servidor funciona en el puerto 3000`);
-});
+Main();
